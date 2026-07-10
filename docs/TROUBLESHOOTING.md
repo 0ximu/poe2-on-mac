@@ -135,7 +135,7 @@ Also check: if your AirPods are set as the Mac's *input* (microphone) device, ma
 - The real fix needs EE2 to send plain Ctrl+C instead of Ctrl+Alt+C on wine setups; see [Exiled-Exchange-2 issue #349](https://github.com/Kvan7/Exiled-Exchange-2/issues/349) for the root cause writeup and status. Until it's fixed upstream, the workaround is patching EE2's key simulation locally (reroute the copy tap through System Events with plain Ctrl+C, re-activate the game window first, and extend the clipboard poll timeout; you'll need to re-sign the app and re-grant Accessibility after patching, since editing a bundle invalidates macOS permission grants).
 - While testing permissions: EE2 must be launched via `open` / Finder, not by running its binary from a terminal, or macOS attributes its permission checks to the terminal and EE2 exits at startup.
 
-**Expectations after the fix:** price check works reliably; the copied item text is the plain version (no advanced mod tiers), which EE2 parses fine.
+**Expectations after the fix:** price check works reliably. And you don't have to lose the advanced mod text either: turn on the game's **Advanced Mod Descriptions** view (Options; default is holding Alt, set it to toggle if available). With the advanced view active, a plain Ctrl+C copies the full advanced text, tiers and roll ranges included, so the trade overlay gets complete data without the poisonous Alt ever entering the combo.
 
 ---
 
