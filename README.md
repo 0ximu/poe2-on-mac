@@ -2,6 +2,10 @@
 
 Run Path of Exile 2 natively on your Mac. No Windows, no virtual machine, no cloud streaming. Native resolution, one click to play, and a launcher that repairs itself when things break.
 
+![Path of Exile 2 running natively on an Apple Silicon Mac](docs/media/demo.gif)
+
+*Real footage: 4K gameplay on an M4 Max, macOS menu bar and all.*
+
 This repo is the distilled result of weeks of real-world setup, crashes, and fixes on an M4 Max running macOS 26. Everything in here exists because something actually broke and we figured out why.
 
 **What you get:**
