@@ -113,7 +113,8 @@ More detail (and every crash we've ever diagnosed) in [docs/TROUBLESHOOTING.md](
    ~/.local/bin/poe2-heal
    ```
 2. Still broken? Check [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) - find your symptom, apply the fix.
-3. Still broken? Open an issue here with the last ~30 lines of the game log:
+3. Using Claude Code or another AI assistant? Point it at this repo. It ships a [CLAUDE.md](CLAUDE.md) with the full diagnostic playbook (where the logs are, what each crash signature means, what's safe to touch), so the AI can debug your setup instead of guessing.
+4. Still broken? Open an issue here with the last ~30 lines of the game log:
    ```
    <YourWrapper.app>/Contents/SharedSupport/prefix/drive_c/Program Files (x86)/Grinding Gear Games/Path of Exile 2 - poe2_production/logs/Client.txt
    ```
