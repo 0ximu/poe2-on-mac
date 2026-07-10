@@ -22,9 +22,11 @@ PREFIX="$WRAPPER_APP/Contents/SharedSupport/prefix"
 ok=0; fixed=0; failed=0
 
 say()  { print -r -- "$@" }
-pass() { say "  [ok]    $1"; ((ok++)) }
-fix()  { say "  [FIXED] $1"; ((fixed++)) }
-bad()  { say "  [FAIL]  $1"; ((failed++)) }
+# note: ((++x)), not ((x++)). Post-increment evaluates to the OLD value, so the
+# first ((x++)) on a zero counter returns "false" and poisons && / || chains.
+pass() { say "  [ok]    $1"; (( ++ok )) }
+fix()  { say "  [FIXED] $1"; (( ++fixed )) }
+bad()  { say "  [FAIL]  $1"; (( ++failed )) }
 
 say "Checking wrapper: $WRAPPER_APP"
 say ""
