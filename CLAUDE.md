@@ -36,6 +36,8 @@ Scripts and docs for running Path of Exile 2 (a Windows game) on Apple Silicon M
 | `nodrv_CreateWindow ... no driver could be loaded` | launched from a detached shell/SSH/cron | launch via `open` or the Desktop app; wine needs the GUI session |
 | Log shows `Wiping cache ShaderCache...`, slow first boot after patch | normal shader cache rebuild | wait it out once, don't force quit |
 | Audio on wrong device | `audio_device_id` pins output by exact name, unicode apostrophes included | change in game (Options > Audio), or edit config byte exact while game is closed |
+| Trade overlay (EE2) price check empty, `[ClipboardPoller] No item text found`, manual Ctrl+C copies fine | wine drops synthetic **Ctrl+Alt+C** (EE2's copy combo) while plain synthetic Ctrl+C works; Alt-based hotkeys add the same poison modifier; focus race compounds it | bind price check to a single modifier-free key (F6); upstream fix tracked in Kvan7/Exiled-Exchange-2#349; local patch = reroute EE2's copy tap to plain Ctrl+C via System Events + refocus game + extend poll timeout (re-sign app and re-grant TCC after) |
+| EE2 exits at startup: "Accessibility permission not granted" despite toggle ON | launched from a terminal (TCC attributes the check to the terminal), or app was re-signed (grants bind to code signature) | launch via `open`/Finder; after any re-sign run `tccutil reset` for its bundle id and re-grant |
 
 ## Hard rules
 

@@ -121,6 +121,24 @@ Also check: if your AirPods are set as the Mac's *input* (microphone) device, ma
 
 ---
 
+## Trade overlay (Exiled Exchange 2): price check shows nothing, overlay itself works
+
+**Symptom:** Exiled Exchange 2 is installed and running, Shift+Space opens the overlay fine, but the price check hotkey does nothing useful. The screen may "bounce" briefly (menu bar flashes into view), then no window, or an empty one. EE2's debug log shows `[ClipboardPoller] No item text found`. Manually pressing Ctrl+C on a hovered item copies the item text fine.
+
+**Cause (two stacked problems, both invisible):**
+
+1. **Wine drops the Alt-modified copy combo.** EE2 doesn't read the item directly; it simulates the game's copy shortcut and reads the clipboard. It builds that shortcut as Ctrl + *show-mods-key* + C, which is **Ctrl+Alt+C** by default. On wine-based installs, synthetic Ctrl+C reaches the game but synthetic **Ctrl+Alt+C never does**. We verified this by sending both combos in isolation: plain Ctrl+C copied item text every time, Ctrl+Alt+C never did. Bonus trap: if your price check hotkey itself uses a held Alt (like Alt+A), your own finger adds the poison modifier.
+2. **Focus race.** When the price window opens, the game can briefly lose focus (that's the menu bar flash), and the simulated keystroke fires at the wrong window.
+
+**Fix:**
+- Bind price check to a **single key with no modifiers** (e.g. F6) in the EE2 overlay settings.
+- The real fix needs EE2 to send plain Ctrl+C instead of Ctrl+Alt+C on wine setups; see [Exiled-Exchange-2 issue #349](https://github.com/Kvan7/Exiled-Exchange-2/issues/349) for the root cause writeup and status. Until it's fixed upstream, the workaround is patching EE2's key simulation locally (reroute the copy tap through System Events with plain Ctrl+C, re-activate the game window first, and extend the clipboard poll timeout; you'll need to re-sign the app and re-grant Accessibility after patching, since editing a bundle invalidates macOS permission grants).
+- While testing permissions: EE2 must be launched via `open` / Finder, not by running its binary from a terminal, or macOS attributes its permission checks to the terminal and EE2 exits at startup.
+
+**Expectations after the fix:** price check works reliably; the copied item text is the plain version (no advanced mod tiers), which EE2 parses fine.
+
+---
+
 ## Launching from a script/SSH shows nothing
 
 **Symptom:** launching from cron, SSH, or a detached script produces no window; wine logs show `Application tried to create a window, but no driver could be loaded`.
