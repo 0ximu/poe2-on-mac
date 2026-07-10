@@ -47,7 +47,7 @@ The "wrapper" is a normal-looking Mac app that bundles Wine + D3DMetal + a fake 
 ### Step 1: Create the wrapper and install the game
 
 1. Download **Sikarugir** (a free, open source Wine wrapper app for macOS) from its official GitHub releases: <https://github.com/Sikarugir-App/Sikarugir>
-2. Use it to create a new wrapper app. When asked for an engine, pick the newest **CX/D3DMetal** engine offered (as of this writing: WineCX 24.x). Do **not** pick a plain Wine 10 engine - those ship without D3DMetal and the game will not render.
+2. Use it to create a new wrapper app. When asked for an engine, pick a D3DMetal capable one. This guide is tested against **WineCX 24.x**; newer engines (WineSikarugir 10.x) also support D3DMetal, I just haven't tested them with POE2 as thoroughly yet. (D3DMetal itself ships inside the Sikarugir app; engines provide the wine side, `winemetal.dll`.)
 3. Name the wrapper something obvious like `POE2.app`. Put it wherever you have space - an external SSD is fine.
 4. Download the POE2 **standalone installer** from pathofexile.com, then run it inside the wrapper (Sikarugir has an "install software" flow). Let it download the full game. This takes a while - it's ~150 GB.
 5. Launch the game once from the wrapper to confirm it starts, then quit it.
