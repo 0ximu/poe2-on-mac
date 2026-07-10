@@ -101,6 +101,16 @@ Also check: if your AirPods are set as the Mac's *input* (microphone) device, ma
 
 ---
 
+## Patch fails: updater can't overwrite the game executable
+
+**Symptom:** after GGG ships a patch, the in-game updater errors out and can't replace `PathOfExile.exe`.
+
+**Cause:** wine sometimes holds a lock on the running executable, so the updater writes the new one as `PathOfExile.tmp` and can't swap it in.
+
+**Fix** (credit: the [poewiki Mac guide](https://www.poewiki.net/wiki/Guide:Path_of_Exile_on_Mac_using_Windows_Client)): in the game folder inside the wrapper, rename `PathOfExile.exe` to `PathOfExile.old`, then rename `PathOfExile.tmp` to `PathOfExile.exe`, then launch again to finish the update. Repeat if it recurs on a later patch.
+
+---
+
 ## First launch after a patch takes forever
 
 **Symptom:** after a game update, the first launch sits at a black screen or the menu takes 30-60 s to appear. `Client.txt` shows `Wiping cache ShaderCache...`.

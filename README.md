@@ -54,6 +54,8 @@ The "wrapper" is a normal-looking Mac app that bundles Wine + D3DMetal + a fake 
 
 If step 5 works, the hard part is over.
 
+For a more detailed walkthrough of the wrapper creation itself (plus CrossOver setup, Path of Building and trade tools), the community guide pinned in the official POE Discord is excellent: [Path of Exile on Mac using Windows Client](https://www.poewiki.net/wiki/Guide:Path_of_Exile_on_Mac_using_Windows_Client). That guide covers getting set up; this repo focuses on what comes after, keeping the setup healthy without manual fixes.
+
 ### Step 2: Install this repo's launcher
 
 Pick whichever feels less scary. Both do the same thing.
