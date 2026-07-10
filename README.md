@@ -108,10 +108,11 @@ More detail (and every crash we've ever diagnosed) in [docs/TROUBLESHOOTING.md](
 
 ## When something breaks
 
-1. Run the repair tool first. It fixes the three most common silent breakages in seconds:
+1. Run the repair tool first. It fixes the most common silent breakages in seconds:
    ```sh
    ~/.local/bin/poe2-heal
    ```
+   (The Play POE2 app already runs these exact checks quietly before every launch; running the tool manually is for when something is still broken after, and shows you the full report.)
 2. Still broken? Check [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) - find your symptom, apply the fix.
 3. Using Claude Code or another AI assistant? Point it at this repo. It ships a [CLAUDE.md](CLAUDE.md) with the full diagnostic playbook (where the logs are, what each crash signature means, what's safe to touch), so the AI can debug your setup instead of guessing.
 4. Still broken? Open an issue here with the last ~30 lines of the game log:

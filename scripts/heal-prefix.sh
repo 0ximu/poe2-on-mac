@@ -6,27 +6,41 @@
 # found at each step. Safe to run any number of times.
 #
 # Usage:
-#   ./heal-prefix.sh                 (uses ~/.config/poe2-mac/config)
-#   ./heal-prefix.sh /path/to/POE2.app   (explicit wrapper path)
+#   ./heal-prefix.sh                       (uses ~/.config/poe2-mac/config)
+#   ./heal-prefix.sh /path/to/POE2.app     (explicit wrapper path)
+#   ./heal-prefix.sh --quiet [wrapper]     (only report FIXED/FAIL; used by the launcher)
+#
+# This file is the single source of truth for all repair logic. The launcher
+# runs it with --quiet before every launch. Add new checks HERE, not there.
 
-if [[ -n "$1" ]]; then
-  WRAPPER_APP="$1"
+QUIET=0
+WRAPPER_ARG=""
+for arg in "$@"; do
+  case "$arg" in
+    --quiet|-q) QUIET=1 ;;
+    *) WRAPPER_ARG="$arg" ;;
+  esac
+done
+
+if [[ -n "$WRAPPER_ARG" ]]; then
+  WRAPPER_APP="$WRAPPER_ARG"
 elif [[ -f "$HOME/.config/poe2-mac/config" ]]; then
   source "$HOME/.config/poe2-mac/config"
 else
-  echo "Usage: $0 /path/to/YourWrapper.app  (or run install.sh first)" >&2
+  echo "Usage: $0 [--quiet] /path/to/YourWrapper.app  (or run install.sh first)" >&2
   exit 1
 fi
 
 PREFIX="$WRAPPER_APP/Contents/SharedSupport/prefix"
 ok=0; fixed=0; failed=0
 
-say()  { print -r -- "$@" }
+# say() is muted by --quiet; fix/bad always print so the launcher can relay them.
+say()  { (( QUIET )) || print -r -- "$@" }
 # note: ((++x)), not ((x++)). Post-increment evaluates to the OLD value, so the
 # first ((x++)) on a zero counter returns "false" and poisons && / || chains.
 pass() { say "  [ok]    $1"; (( ++ok )) }
-fix()  { say "  [FIXED] $1"; (( ++fixed )) }
-bad()  { say "  [FAIL]  $1"; (( ++failed )) }
+fix()  { print -r -- "  [FIXED] $1"; (( ++fixed )) }
+bad()  { print -r -- "  [FAIL]  $1"; (( ++failed )) }
 
 say "Checking wrapper: $WRAPPER_APP"
 say ""

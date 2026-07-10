@@ -48,6 +48,7 @@ Scripts and docs for running Path of Exile 2 (a Windows game) on Apple Silicon M
 
 ## Working on the repo itself
 
+- **All repair logic lives in `scripts/heal-prefix.sh` and nowhere else.** The launcher (`scripts/play-poe2.sh`) invokes it with `--quiet` before every launch and relays FIXED/FAIL lines as notifications. When adding a check for a new failure mode, add it to heal-prefix.sh only; never inline checks into the launcher.
 - Scripts are zsh (`#!/bin/zsh`), macOS built-in, no bash 4 features, no external deps beyond standard macOS tools.
 - Syntax check: `zsh -n <script>`. Functional check: `zsh scripts/heal-prefix.sh /path/to/Wrapper.app` is read-only-ish (only repairs, idempotent) and safe to run against a healthy wrapper; expect all `[ok]`.
 - `install.sh` self-bootstraps when downloaded alone (curl one-liner), reattaches stdin from `/dev/tty` when piped, and must keep working with zero prompts when exactly one wrapper is found.

@@ -30,43 +30,22 @@ if [[ ! -x "$WRAP" || ! -f "$GAME_EXE" ]]; then
 fi
 
 # ---------------------------------------------------------------------------
-# 2. Self-heal known breakages. All three have actually happened in the wild,
-#    usually after an external drive remount. Each is harmless to re-check.
+# 2. Self-heal known breakages by running poe2-heal in quiet mode.
+#    All repair logic lives in heal-prefix.sh (single source of truth);
+#    quiet mode prints only [FIXED]/[FAIL] lines, which we relay as
+#    notifications. A missing heal script never blocks launching.
 # ---------------------------------------------------------------------------
-
-# a) The drive-map folder lost its execute bit. Wine then can't enter its own
-#    C: drive and the game dies instantly with no log at all
-#    ("wine: could not load kernel32.dll").
-DOSDEV="$PREFIX/dosdevices"
-if [[ -d "$DOSDEV" && ! -x "$DOSDEV" ]]; then
-  chmod 0777 "$DOSDEV" 2>/dev/null && note "Repaired drive-map permissions."
-fi
-
-# b) wineserver loads libinotify through its rpath (SharedSupport/). If that
-#    link is gone, wineserver can't start and the launcher exits silently.
-if [[ -f "$WRAPPER_APP/Contents/Frameworks/libinotify.0.dylib" && \
-      ! -e "$WRAPPER_APP/Contents/SharedSupport/libinotify.0.dylib" ]]; then
-  ln -sf "../Frameworks/libinotify.0.dylib" \
-        "$WRAPPER_APP/Contents/SharedSupport/libinotify.0.dylib" 2>/dev/null
-fi
-
-# c) The Documents symlink inside the prefix got replaced by an empty folder.
-#    The game then reads a blank config, falls back to the Vulkan renderer,
-#    and crashes with "[VULKAN] Failed to allocate texture [Depth]".
-#    Wineskin's default is to link every wine user's Documents to the real
-#    macOS Documents folder, so restore exactly that.
-for userdir in "$PREFIX/drive_c/users"/*(N/); do
-  [[ "${userdir:t}" == "Public" ]] && continue
-  link="$userdir/Documents"
-  if [[ "$(readlink "$link" 2>/dev/null)" != "$HOME/Documents" ]]; then
-    if [[ -e "$link" && ! -L "$link" ]]; then
-      mv "$link" "${link}.broken-$(date +%Y%m%d-%H%M%S)" 2>/dev/null  # preserve, never delete
-    else
-      rm -f "$link" 2>/dev/null                                       # dangling/wrong symlink
-    fi
-    ln -s "$HOME/Documents" "$link" 2>/dev/null && note "Repaired game config link."
-  fi
+for HEAL in "$HOME/.local/bin/poe2-heal" "${0:a:h}/heal-prefix.sh"; do
+  [[ -f "$HEAL" ]] && break
 done
+if [[ -f "$HEAL" ]]; then
+  heal_out=$(zsh "$HEAL" --quiet "$WRAPPER_APP" 2>/dev/null)
+  if print -r -- "$heal_out" | grep -q "\[FAIL\]"; then
+    note "Some repairs failed. Run poe2-heal in Terminal for details."
+  elif [[ -n "$heal_out" ]]; then
+    note "Repaired game files before launch."
+  fi
+fi
 
 # ---------------------------------------------------------------------------
 # 3. Already running? Don't spawn a second copy.
